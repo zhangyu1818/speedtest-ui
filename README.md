@@ -1,8 +1,8 @@
 # Speedtest UI
 
----
-
 ![screenshot](./screenshots/sceenshot.png)
+
+---
 
 A modern and elegant speedtest tool built with Tauri and React, powered by the official Speedtest® CLI.
 
