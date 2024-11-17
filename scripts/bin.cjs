@@ -65,12 +65,19 @@ const download = (url, dest) => {
 
 const extract = (filePath, destDir) => {
   const platform = getPlatform()
-  if (platform === 'windows') {
-    execSync(
-      `powershell -command "Expand-Archive -Path '${filePath}' -DestinationPath '${destDir}' -Force"`,
-    )
-  } else {
-    execSync(`tar -xzf "${filePath}" -C "${destDir}"`)
+  try {
+    if (platform === 'windows') {
+      ensureDir(destDir)
+      execSync(
+        `powershell -command "Expand-Archive -Path '${filePath}' -DestinationPath '${destDir}' -Force"`,
+        { stdio: 'inherit' }
+      )
+    } else {
+      execSync(`tar -xzf "${filePath}" -C "${destDir}"`, { stdio: 'inherit' })
+    }
+  } catch (error) {
+    console.error('Extraction failed:', error)
+    throw error
   }
 }
 
@@ -97,7 +104,10 @@ async function main() {
       return
     }
 
-    const tempFile = path.join(os.tmpdir(), `speedtest-${platform}`)
+    const tempFile = path.join(
+      os.tmpdir(), 
+      `speedtest-${platform}${platform === 'windows' ? '.zip' : '.tgz'}`
+    )
 
     console.log(`Downloading speedtest CLI for ${platform}...`)
     await download(downloadUrl, tempFile)
@@ -105,7 +115,11 @@ async function main() {
     console.log('Extracting...')
     extract(tempFile, binDir)
 
-    fs.unlinkSync(tempFile)
+    try {
+      fs.unlinkSync(tempFile)
+    } catch (error) {
+      console.warn('Warning: Failed to delete temporary file:', error)
+    }
 
     console.log('Done!')
   } catch (error) {
