@@ -20,6 +20,22 @@ A modern and elegant speedtest tool built with Tauri and React, powered by the o
 
 Please check the [releases page](https://github.com/zhangyu1818/speedtest-ui/releases).
 
+### MacOS
+
+**The application is damaged**
+
+```bash
+xattr -cr /Applications/Speedtest\ UI.app/
+```
+
+### Linux
+
+Untested
+
+### Windows
+
+Untested
+
 ## Development
 
 ### Prerequisites
