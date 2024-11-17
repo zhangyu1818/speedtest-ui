@@ -4,7 +4,7 @@
 
 ---
 
-A modern and elegant speedtest tool built with Tauri and React, powered by the official Speedtest® CLI.
+A modern and elegant speedtest tool built with Tauri and React, based on Speedtest® CLI.
 
 > [!IMPORTANT]
 > This software is for learning and research purposes only. Commercial use is strictly prohibited.
