@@ -1,6 +1,6 @@
 pub mod models;
 
-use std::io::{BufRead, BufReader, Write};
+use std::io::{BufRead, BufReader};
 use std::process::{Command, Stdio};
 use std::thread;
 use tauri::{path::BaseDirectory, AppHandle, Emitter, Manager};
@@ -21,6 +21,7 @@ async fn run_speedtest(app: AppHandle) -> Result<bool, String> {
         .map_err(|e| format!("Failed to resolve resource path: {}", e))?;
 
     let mut child = Command::new(command_path)
+        .arg("--accept-license")
         .arg("--format=json")
         .arg("--progress=yes")
         .arg("--unit=B/s")
@@ -29,12 +30,6 @@ async fn run_speedtest(app: AppHandle) -> Result<bool, String> {
         .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| e.to_string())?;
-
-    if let Some(mut stdin) = child.stdin.take() {
-        thread::spawn(move || {
-            stdin.write_all(b"y\n").unwrap();
-        });
-    }
 
     let stdout = child
         .stdout
